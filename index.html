@@ -138,6 +138,115 @@
   .product-card h3 { font-size: 1rem; color: var(--gold); margin-bottom: 0.5rem; }
   .product-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
 
+  /* ══════════════════════════════════════
+     GALLERY SLIDESHOW SECTION
+  ══════════════════════════════════════ */
+  #gallery { background: var(--dark3); padding: 5rem 0; overflow: hidden; }
+  .gallery-header { text-align: center; margin-bottom: 3rem; padding: 0 2rem; }
+
+  /* AUTO-SCROLL STRIP */
+  .gallery-strip-wrap { position: relative; overflow: hidden; }
+  .gallery-strip-wrap::before,
+  .gallery-strip-wrap::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; width: 120px; z-index: 2;
+    pointer-events: none;
+  }
+  .gallery-strip-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, var(--dark3), transparent);
+  }
+  .gallery-strip-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, var(--dark3), transparent);
+  }
+  .gallery-strip {
+    display: flex; gap: 1.2rem;
+    animation: scrollLeft 22s linear infinite;
+    width: max-content;
+  }
+  .gallery-strip:hover { animation-play-state: paused; }
+  .gallery-strip-2 {
+    display: flex; gap: 1.2rem;
+    animation: scrollRight 28s linear infinite;
+    width: max-content;
+    margin-top: 1.2rem;
+  }
+  .gallery-strip-2:hover { animation-play-state: paused; }
+
+  @keyframes scrollLeft {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes scrollRight {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  .gallery-img-card {
+    flex-shrink: 0;
+    width: 280px; height: 200px;
+    border: 1px solid rgba(212,175,55,0.15);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+  .gallery-img-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s ease, filter 0.4s;
+    filter: brightness(0.85) saturate(0.9);
+  }
+  .gallery-img-card:hover img { transform: scale(1.08); filter: brightness(1) saturate(1.1); }
+  .gallery-img-card-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+    padding: 0.8rem 1rem 0.6rem;
+    font-size: 0.75rem; font-family: 'Raleway', sans-serif;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--gold); opacity: 0; transition: opacity 0.3s;
+  }
+  .gallery-img-card:hover .gallery-img-card-label { opacity: 1; }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.92);
+    align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox-img {
+    max-width: 90vw; max-height: 85vh;
+    object-fit: contain;
+    border: 1px solid rgba(212,175,55,0.3);
+    animation: zoomIn 0.3s ease;
+  }
+  .lightbox-close {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    background: none; border: 1px solid rgba(212,175,55,0.4);
+    color: var(--gold); font-size: 1.5rem;
+    width: 42px; height: 42px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.3s;
+  }
+  .lightbox-close:hover { background: rgba(212,175,55,0.15); }
+  .lightbox-prev, .lightbox-next {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.3);
+    color: var(--gold); font-size: 1.5rem;
+    width: 48px; height: 48px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.3s;
+  }
+  .lightbox-prev:hover, .lightbox-next:hover { background: rgba(212,175,55,0.3); }
+  .lightbox-prev { left: 1.5rem; }
+  .lightbox-next { right: 1.5rem; }
+  .lightbox-counter {
+    position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.1em;
+  }
+  @keyframes zoomIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
   /* OCCASIONS */
   #occasions { background: var(--dark2); }
   .occasions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
@@ -210,6 +319,7 @@
     .nav-links a { font-size: 0.75rem; }
     .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
     section { padding: 4rem 1.5rem; }
+    .gallery-img-card { width: 220px; height: 160px; }
   }
   @media (max-width: 480px) {
     .nav-links { display: none; }
@@ -225,6 +335,7 @@
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#products">Products</a></li>
+    <li><a href="#gallery">Gallery</a></li>
     <li><a href="#occasions">Occasions</a></li>
     <li><a href="#why">Why Us</a></li>
     <li><a href="#team">Branches</a></li>
@@ -274,24 +385,91 @@
     <div class="section-line"></div>
     <div class="products-grid">
       <div class="product-card">
-        <div class="product-img-wrap"><img class="product-img" src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80" alt="Custom T-Shirts" loading="lazy"></div>
+        <div class="product-img-wrap"><img class="product-img" src="images/tshirt.png" alt="Custom T-Shirts" loading="lazy"></div>
         <div class="product-body"><div class="product-icon">👕</div><h3>Custom T-Shirts</h3><p>Fully customised T-shirts with your design, logo, name or number. Perfect for groups, events, and branding.</p></div>
       </div>
       <div class="product-card">
-        <div class="product-img-wrap"><img class="product-img" src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=600&q=80" alt="Sports Dress" loading="lazy"></div>
+        <div class="product-img-wrap"><img class="product-img" src="images/sports.png" alt="Sports Dress" loading="lazy"></div>
         <div class="product-body"><div class="product-icon">⚽</div><h3>Sports Dress</h3><p>Professional sports uniforms for football, cricket, kabaddi and more — designed for performance and style.</p></div>
       </div>
       <div class="product-card">
-        <div class="product-img-wrap"><img class="product-img" src="https://tse4.mm.bing.net/th/id/OIP.b3heCAwusl-WccdqQkLX-gHaEk?pid=Api&P=0&h=180" alt="Lowers and Track Pants" loading="lazy"></div>
+        <div class="product-img-wrap"><img class="product-img" src="images/lowers.png" alt="Lowers and Track Pants" loading="lazy"></div>
         <div class="product-body"><div class="product-icon">👖</div><h3>Lowers & Track Pants</h3><p>Comfortable and durable lowers and track pants, ideal for sports practice, gym and casual wear.</p></div>
       </div>
       <div class="product-card">
-        <div class="product-img-wrap"><img class="product-img" src="https://tse4.mm.bing.net/th/id/OIP.3ehWpfe02vTkl6wzbdn1GgAAAA?pid=Api&P=0&h=180" alt="Group T-Shirts" loading="lazy"></div>
+        <div class="product-img-wrap"><img class="product-img" src="images/grouptshirt.png" alt="Group T-Shirts" loading="lazy"></div>
         <div class="product-body"><div class="product-icon">🎽</div><h3>Group T-Shirts</h3><p>Matching group T-shirts for temple festivals, college trips, family gatherings and special occasions.</p></div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ══════════════════════════════════════
+     GALLERY SECTION — AUTO SLIDING
+══════════════════════════════════════ -->
+<section id="gallery">
+  <div class="gallery-header">
+    <div class="section-label" style="justify-content:center;display:flex;">Our Work</div>
+    <h2 class="section-title">Our <span style="color:var(--gold)">Gallery</span></h2>
+    <div class="section-line" style="margin:0.5rem auto 0.5rem;"></div>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-top:0.5rem;">A glimpse of our finest work</p>
+  </div>
+
+  <!-- ROW 1 — slides LEFT -->
+  <div class="gallery-strip-wrap">
+    <div class="gallery-strip" id="strip1">
+      <!-- Add your own images inside images/ folder. Repeat the set for seamless loop -->
+      <div class="gallery-img-card" onclick="openLightbox(0)"><img src="images/D-1.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(1)"><img src="images/D-2.png" alt="Sports T-Shirt"><div class="gallery-img-card-label">Sports T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(2)"><img src="images/D-3.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Track Pants</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(3)"><img src="images/D-4.png" alt="Group T-Shirt"><div class="gallery-img-card-label">Group T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(4)"><img src="images/D-5.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(5)"><img src="images/D-6.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(6)"><img src="images/D-7.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(7)"><img src="images/D-8.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <!-- DUPLICATE for seamless loop -->
+      <div class="gallery-img-card" onclick="openLightbox(0)"><img src="images/D-1.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(1)"><img src="images/D-2.png" alt="Sports T-Shirt"><div class="gallery-img-card-label">Sports T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(2)"><img src="images/D-3.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Track Pants</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(3)"><img src="images/D-4.png" alt="Group T-Shirt"><div class="gallery-img-card-label">Group T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(4)"><img src="images/D-5.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(5)"><img src="images/D-6.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(6)"><img src="images/D-7.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(7)"><img src="images/D-8.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+  </div>
+
+  <!-- ROW 2 — slides RIGHT -->
+  <div class="gallery-strip-wrap" style="margin-top:1.2rem;">
+    <div class="gallery-strip-2" id="strip2">
+      <div class="gallery-img-card" onclick="openLightbox(3)"><img src="images/D-9.png" alt="Group T-Shirt"><div class="gallery-img-card-label">Group T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(6)"><img src="images/D-10.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(1)"><img src="images/D-11.png" alt="Sports Dress"><div class="gallery-img-card-label">Sports T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(7)"><img src="images/D-12.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(0)"><img src="images/D-13.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(5)"><img src="images/D-14.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(2)"><img src="images/D-15.png" alt="Track Pants"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(4)"><img src="images/D-16.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <!-- DUPLICATE -->
+      <div class="gallery-img-card" onclick="openLightbox(3)"><img src="images/D-9.png" alt="Group T-Shirt"><div class="gallery-img-card-label">Group T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(6)"><img src="images/D-10.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(1)"><img src="images/D-11.png" alt="Sports Dress"><div class="gallery-img-card-label">Sports T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(7)"><img src="images/D-12.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(0)"><img src="images/D-13.png" alt="Custom T-Shirt"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(5)"><img src="images/D-14.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(2)"><img src="images/D-15.png" alt="Track Pants"><div class="gallery-img-card-label">Custom T-Shirt</div></div>
+      <div class="gallery-img-card" onclick="openLightbox(4)"><img src="images/D-16.png" alt="Our Work"><div class="gallery-img-card-label">Our Work</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-prev" onclick="changeLightbox(-1)">‹</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <button class="lightbox-next" onclick="changeLightbox(1)">›</button>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
 
 <!-- OCCASIONS -->
 <section id="occasions">
@@ -339,7 +517,7 @@
         <span class="branch-tag">Main Branch</span>
         <h3>Thimmanaickenpatti, Rasipuram</h3>
         <p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.5rem;">Namakkal District, Tamil Nadu</p>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.5rem;">📞 9791268087</p>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.5rem;">📞 9791268087 / 9500446629 / 9500744943</p>
         <p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem;">✉️ sriperiyandavarsportswear@gmail.com</p>
       </div>
       <div class="branch-card">
@@ -361,7 +539,6 @@
     <div class="contact-grid">
       <div class="contact-info">
         <h3>Contact Details</h3>
-
         <div class="contact-item">
           <div class="contact-item-icon">📞</div>
           <div class="contact-item-text">
@@ -369,7 +546,6 @@
             <a href="tel:9791268087">9791268087 / 9500446629 / 9626951852</a>
           </div>
         </div>
-
         <div class="contact-item">
           <div class="contact-item-icon">✉️</div>
           <div class="contact-item-text">
@@ -377,7 +553,6 @@
             <a href="mailto:sriperiyandavarsportswear@gmail.com">sriperiyandavarsportswear@gmail.com</a>
           </div>
         </div>
-
         <div class="contact-item">
           <div class="contact-item-icon">📍</div>
           <div class="contact-item-text">
@@ -385,7 +560,6 @@
             <span>Thimmanaickenpatti, Rasipuram, Namakkal</span>
           </div>
         </div>
-
         <div class="contact-item">
           <div class="contact-item-icon">📍</div>
           <div class="contact-item-text">
@@ -393,13 +567,9 @@
             <span>Karumanthurai, Salem</span>
           </div>
         </div>
-
-        <!-- INSTAGRAM -->
         <div class="contact-item">
           <div class="contact-item-icon" style="border-color:rgba(225,48,108,0.4);">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;fill:#e1306c">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.43.403a4.92 4.92 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.163.46.35 1.26.403 2.43.058 1.265.07 1.645.07 4.849s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.403 2.43a4.902 4.902 0 01-1.153 1.772 4.92 4.92 0 01-1.772 1.153c-.46.163-1.26.35-2.43.403-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.43-.403a4.92 4.92 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.163-.46-.35-1.26-.403-2.43C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.054-1.17.24-1.97.403-2.43A4.902 4.902 0 013.789 2.94 4.92 4.92 0 015.56 1.787c.46-.163 1.26-.35 2.43-.403C9.256 2.175 9.636 2.163 12 2.163zm0-2.163C8.756 0 8.332.013 7.052.072 5.775.131 4.902.333 4.14.63a7.07 7.07 0 00-2.561 1.667A7.07 7.07 0 00.63 4.14C.333 4.902.131 5.775.072 7.052.013 8.332 0 8.756 0 12c0 3.244.013 3.668.072 4.948.059 1.277.261 2.15.558 2.912a7.07 7.07 0 001.667 2.561 7.07 7.07 0 002.561 1.667c.762.297 1.635.499 2.912.558C8.332 23.987 8.756 24 12 24s3.668-.013 4.948-.072c1.277-.059 2.15-.261 2.912-.558a7.07 7.07 0 002.561-1.667 7.07 7.07 0 001.667-2.561c.297-.762.499-1.635.558-2.912.059-1.28.072-1.704.072-4.948s-.013-3.668-.072-4.948c-.059-1.277-.261-2.15-.558-2.912a7.07 7.07 0 00-1.667-2.561A7.07 7.07 0 0019.86.63C19.098.333 18.225.131 16.948.072 15.668.013 15.244 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-            </svg>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;fill:#e1306c"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.43.403a4.92 4.92 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.163.46.35 1.26.403 2.43.058 1.265.07 1.645.07 4.849s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.403 2.43a4.902 4.902 0 01-1.153 1.772 4.92 4.92 0 01-1.772 1.153c-.46.163-1.26.35-2.43.403-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.43-.403a4.92 4.92 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.163-.46-.35-1.26-.403-2.43C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.054-1.17.24-1.97.403-2.43A4.902 4.902 0 013.789 2.94 4.92 4.92 0 015.56 1.787c.46-.163 1.26-.35 2.43-.403C9.256 2.175 9.636 2.163 12 2.163zm0-2.163C8.756 0 8.332.013 7.052.072 5.775.131 4.902.333 4.14.63a7.07 7.07 0 00-2.561 1.667A7.07 7.07 0 00.63 4.14C.333 4.902.131 5.775.072 7.052.013 8.332 0 8.756 0 12c0 3.244.013 3.668.072 4.948.059 1.277.261 2.15.558 2.912a7.07 7.07 0 001.667 2.561 7.07 7.07 0 002.561 1.667c.762.297 1.635.499 2.912.558C8.332 23.987 8.756 24 12 24s3.668-.013 4.948-.072c1.277-.059 2.15-.261 2.912-.558a7.07 7.07 0 002.561-1.667 7.07 7.07 0 001.667-2.561c.297-.762.499-1.635.558-2.912.059-1.28.072-1.704.072-4.948s-.013-3.668-.072-4.948c-.059-1.277-.261-2.15-.558-2.912a7.07 7.07 0 00-1.667-2.561A7.07 7.07 0 0019.86.63C19.098.333 18.225.131 16.948.072 15.668.013 15.244 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </div>
           <div class="contact-item-text">
             <div class="label">Instagram</div>
@@ -410,14 +580,9 @@
             </a>
           </div>
         </div>
-
       </div>
-
-      <!-- WHATSAPP BOX -->
       <div class="whatsapp-box">
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:56px;height:56px;fill:#25D366">
-          <path d="M16 0C7.163 0 0 7.163 0 16c0 2.824.736 5.476 2.027 7.775L0 32l8.437-2.01A15.938 15.938 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.267 13.267 0 01-6.763-1.845l-.485-.287-5.01 1.194 1.216-4.877-.317-.502A13.267 13.267 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.27-9.874c-.398-.199-2.355-1.162-2.72-1.294-.364-.133-.63-.199-.895.199-.265.398-1.028 1.294-1.26 1.56-.232.265-.464.298-.862.1-.398-.2-1.68-.619-3.2-1.975-1.183-1.055-1.981-2.358-2.213-2.756-.232-.398-.025-.613.174-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.133-.266.066-.498-.033-.697-.1-.199-.895-2.158-1.227-2.955-.323-.775-.65-.67-.895-.682l-.762-.013c-.265 0-.696.1-1.061.498-.364.398-1.393 1.361-1.393 3.319 0 1.958 1.426 3.85 1.625 4.116.199.265 2.806 4.283 6.797 6.007.95.41 1.692.655 2.27.839.954.304 1.822.261 2.509.158.765-.114 2.355-.963 2.688-1.893.332-.93.332-1.727.232-1.893-.099-.166-.364-.265-.762-.464z"/>
-        </svg>
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:56px;height:56px;fill:#25D366"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.824.736 5.476 2.027 7.775L0 32l8.437-2.01A15.938 15.938 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.267 13.267 0 01-6.763-1.845l-.485-.287-5.01 1.194 1.216-4.877-.317-.502A13.267 13.267 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.27-9.874c-.398-.199-2.355-1.162-2.72-1.294-.364-.133-.63-.199-.895.199-.265.398-1.028 1.294-1.26 1.56-.232.265-.464.298-.862.1-.398-.2-1.68-.619-3.2-1.975-1.183-1.055-1.981-2.358-2.213-2.756-.232-.398-.025-.613.174-.811.179-.178.398-.464.597-.696.199-.232.265-.398.398-.663.133-.266.066-.498-.033-.697-.1-.199-.895-2.158-1.227-2.955-.323-.775-.65-.67-.895-.682l-.762-.013c-.265 0-.696.1-1.061.498-.364.398-1.393 1.361-1.393 3.319 0 1.958 1.426 3.85 1.625 4.116.199.265 2.806 4.283 6.797 6.007.95.41 1.692.655 2.27.839.954.304 1.822.261 2.509.158.765-.114 2.355-.963 2.688-1.893.332-.93.332-1.727.232-1.893-.099-.166-.364-.265-.762-.464z"/></svg>
         <h3>Chat with Us on WhatsApp</h3>
         <p>Place your order, ask about pricing, or check delivery dates — we're available on WhatsApp!</p>
         <a class="btn-whatsapp" href="https://wa.me/919791268087?text=Hi%2C%20I%20would%20like%20to%20enquire%20about%20your%20sportswear%20products." target="_blank">
@@ -447,6 +612,58 @@
   </p>
   <p style="margin-top:1.5rem;font-size:0.75rem;">© 2025 Sri Periyandavar Sportswear. All rights reserved.</p>
 </footer>
+
+<!-- LIGHTBOX JAVASCRIPT -->
+<script>
+  const galleryImages = [
+    { src: 'images/tshirt.jpg',      label: 'Custom T-Shirt' },
+    { src: 'images/sports.png',      label: 'Sports Dress' },
+    { src: 'images/lowers.png',      label: 'Track Pants' },
+    { src: 'images/grouptshirt.png', label: 'Group T-Shirt' },
+    { src: 'images/gallery1.jpg',    label: 'Our Work' },
+    { src: 'images/gallery2.jpg',    label: 'Our Work' },
+    { src: 'images/gallery3.jpg',    label: 'Our Work' },
+    { src: 'images/gallery4.jpg',    label: 'Our Work' },
+  ];
+
+  let currentIndex = 0;
+
+  function openLightbox(index) {
+    currentIndex = index;
+    updateLightbox();
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function closeLightboxOutside(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+
+  function changeLightbox(dir) {
+    currentIndex = (currentIndex + dir + galleryImages.length) % galleryImages.length;
+    updateLightbox();
+  }
+
+  function updateLightbox() {
+    const img = galleryImages[currentIndex];
+    document.getElementById('lightboxImg').src = img.src;
+    document.getElementById('lightboxImg').alt = img.label;
+    document.getElementById('lightboxCounter').textContent = (currentIndex + 1) + ' / ' + galleryImages.length + '  —  ' + img.label;
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('lightbox').classList.contains('active')) return;
+    if (e.key === 'ArrowRight') changeLightbox(1);
+    if (e.key === 'ArrowLeft')  changeLightbox(-1);
+    if (e.key === 'Escape')     closeLightbox();
+  });
+</script>
 
 </body>
 </html>
